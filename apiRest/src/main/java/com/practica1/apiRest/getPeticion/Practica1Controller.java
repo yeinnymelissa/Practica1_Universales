@@ -1,4 +1,4 @@
-package com.practica1.apiRest.forGet;
+package com.practica1.apiRest.getPeticion;
 
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -7,27 +7,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
-import com.fasterxml.jackson.annotation.JsonTypeInfo.None;
-import com.fasterxml.jackson.annotation.Nulls;
-
-import static org.hamcrest.CoreMatchers.nullValue;
-
-import java.nio.channels.NonReadableChannelException;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.lang.model.type.NullType;
-
 import org.json.JSONObject;
-import org.hamcrest.core.IsNull;
 import org.json.JSONArray;
-import org.json.simple.parser.JSONParser;
 
 @RestController
 @RequestMapping("/rest")
 @CrossOrigin
-public class ApiRestController {
-	
+public class Practica1Controller {
 	@RequestMapping("/hello")
 	public String hello() {
 		return "Hello Yeinny";
@@ -45,7 +34,6 @@ public class ApiRestController {
 	
 	@GetMapping(value = "/find/{nameC}")
 	private List findTodo(@PathVariable("nameC") String nameC) {
-		JSONParser parser = new JSONParser();
 		
 		String[] splitName = nameC.split("%20");
 		
@@ -68,7 +56,7 @@ public class ApiRestController {
 
 		
 		JSONObject jsonITunes = new JSONObject(result); 
-		ArrayList<InfoPeople> listPeople = new ArrayList<InfoPeople>();
+		ArrayList<PeopleInfo> listPeople = new ArrayList<PeopleInfo>();
 		
 		JSONArray objectInfo = (JSONArray) jsonITunes.get("results");
 		
@@ -79,7 +67,7 @@ public class ApiRestController {
             String track = person.get("trackName").toString();
             String type = person.get("kind").toString();
             String service = "API ITunes";
-            InfoPeople one = new InfoPeople(name, track, type, service, linkITunes);
+            PeopleInfo one = new PeopleInfo(name, track, type, service, linkITunes);
             listPeople.add(one);
             cont++;
         }
@@ -93,14 +81,14 @@ public class ApiRestController {
             String name = person.get("name").toString();
             String type = "People";
             String service = "API TVMaze";
-            InfoPeople one = new InfoPeople(name, null, type, service, linkTVMaze);
+            PeopleInfo one = new PeopleInfo(name, null, type, service, linkTVMaze);
             listPeople.add(one);
             contTV++;
         }
         
         JSONArray list = new JSONArray();
         
-		for(InfoPeople people : listPeople) {
+		for(PeopleInfo people : listPeople) {
 			JSONObject person = new JSONObject();
 			
 			person.put("type", people.type);
@@ -118,5 +106,7 @@ public class ApiRestController {
 			
 		}
 		return list.toList();
+		
+		
 	}
 }
