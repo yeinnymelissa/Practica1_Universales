@@ -12,6 +12,7 @@ import java.util.List;
 
 import org.json.JSONObject;
 import org.json.JSONArray;
+import java.util.Objects;
 
 @RestController
 @RequestMapping("/rest")
@@ -106,7 +107,93 @@ public class Practica1Controller {
 			
 		}
 		return list.toList();
-		
-		
 	}
+	
+	@GetMapping(value = "/searchLink/{parameter}")
+	private List findTod(@PathVariable("parameter") String parameter) {
+		
+		String[] splitParameter = parameter.split("%20");
+		
+		String nameParameter = "";
+		
+		for (int i=0;i<splitParameter.length;i++) {
+		      if(i == 0){
+		    	  nameParameter += splitParameter[i];
+		      }else {
+		    	  nameParameter += "+" + splitParameter[i];
+		      }
+		}
+		RestTemplate restTemplate = new RestTemplate();
+		String linkITunes = "https://itunes.apple.com/search?term="+nameParameter;
+		String result = restTemplate.getForObject(linkITunes, String.class);
+		
+		
+		String linkTVMaze = "https://api.tvmaze.com/search/shows?q="+parameter;
+		String resultTV = restTemplate.getForObject(linkTVMaze, String.class);
+
+		
+		JSONObject jsonITunes = new JSONObject(result); 
+		ArrayList<LinkInfo> listLink = new ArrayList<LinkInfo>();
+		
+		JSONArray objectInfo = (JSONArray) jsonITunes.get("results");
+		
+		int cont = 0;
+        while(cont < objectInfo.length()){
+            JSONObject person = (JSONObject) objectInfo.get(cont);
+            String name = person.get("trackName").toString();
+            String type = person.get("kind").toString();
+            String link = person.get("trackViewUrl").toString();
+            String country = person.get("country").toString();
+            String service = "API ITunes";
+            LinkInfo one = new LinkInfo(name, type, link, country, service);
+            listLink.add(one);
+            cont++;
+        }
+        
+        JSONArray jsonTVMaze = new JSONArray(resultTV);
+        
+        int contTV = 0;
+        while(contTV < jsonTVMaze.length()){
+            JSONObject score = (JSONObject) jsonTVMaze.get(contTV);
+            JSONObject show = (JSONObject) score.get("show");
+            String name = show.get("name").toString();
+            String link = show.get("url").toString();
+            String type = "Show";
+            String service = "API TVMaze";
+            if(!show.isNull("network")) {
+            	JSONObject network = (JSONObject) show.get("network");
+            	JSONObject country = (JSONObject) network.get("country");
+                String countryName = country.get("name").toString();
+                LinkInfo one = new LinkInfo(name, type, link, countryName, service);
+                listLink.add(one);
+            } else {
+            	LinkInfo one = new LinkInfo(name, type, link, null, service);
+                listLink.add(one);
+            }
+            contTV++;
+        }
+        
+        JSONArray list = new JSONArray();
+        
+		for(LinkInfo people : listLink) {
+			JSONObject person = new JSONObject();
+			
+			person.put("name", people.name);
+			person.put("type", people.type);
+			person.put("urlSearch", people.link);
+			if(people.country == null) {
+				person.put("country", JSONObject.NULL);
+			}else {
+				person.put("country", people.country);
+			}
+			person.put("service", people.service);
+			
+
+			list.put(person);
+			
+		}
+		return list.toList();
+	}
+	
+	
 }
