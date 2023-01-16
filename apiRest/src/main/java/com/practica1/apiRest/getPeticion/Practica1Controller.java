@@ -7,12 +7,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
+
 import java.util.ArrayList;
 import java.util.List;
 
 import org.json.JSONObject;
 import org.json.JSONArray;
-import java.util.Objects;
 
 @RestController
 @RequestMapping("/rest")
@@ -32,7 +32,8 @@ public class Practica1Controller {
 	}
 	
 	//https://itunes.apple.com/search?term=katy+perry&attribute=allArtistTerm
-	
+
+    
 	@GetMapping(value = "/find/{nameC}")
 	private List findTodo(@PathVariable("nameC") String nameC) {
 		
@@ -91,26 +92,27 @@ public class Practica1Controller {
         
 		for(PeopleInfo people : listPeople) {
 			JSONObject person = new JSONObject();
-			
-			person.put("type", people.type);
-			person.put("service", people.service);
-			person.put("name", people.name);
-			person.put("serviceUrl", people.serviceURL);
-			if(people.trackname == null) {
+
+			person.put("name", people.getName());
+			if(people.getTrackName() == null) {
 				person.put("trackName", JSONObject.NULL);
 			}else {
-				person.put("trackName", people.trackname);
+				person.put("trackName", people.getTrackName());
 			}
+			person.put("type", people.getType());
+			person.put("service", people.getService());
+			person.put("serviceUrl", people.getServiceUrl());
 			
 
 			list.put(person);
 			
 		}
+		
 		return list.toList();
 	}
 	
 	@GetMapping(value = "/searchLink/{parameter}")
-	private List findTod(@PathVariable("parameter") String parameter) {
+	private List searchLink(@PathVariable("parameter") String parameter) {
 		
 		String[] splitParameter = parameter.split("%20");
 		
@@ -178,15 +180,15 @@ public class Practica1Controller {
 		for(LinkInfo people : listLink) {
 			JSONObject person = new JSONObject();
 			
-			person.put("name", people.name);
-			person.put("type", people.type);
-			person.put("urlSearch", people.link);
-			if(people.country == null) {
+			person.put("name", people.getName());
+			person.put("type", people.getType());
+			person.put("urlSearch", people.getLink());
+			if(people.getCountry() == null) {
 				person.put("country", JSONObject.NULL);
 			}else {
-				person.put("country", people.country);
+				person.put("country", people.getCountry());
 			}
-			person.put("service", people.service);
+			person.put("service", people.getService());
 			
 
 			list.put(person);
