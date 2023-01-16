@@ -7,6 +7,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.google.gson.Gson;
+import com.google.gson.JsonStreamParser;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -88,27 +93,56 @@ public class Practica1Controller {
             contTV++;
         }
         
-        JSONArray list = new JSONArray();
-        
-		for(PeopleInfo people : listPeople) {
-			JSONObject person = new JSONObject();
+		/*
+		 * JSONArray list = new JSONArray();
+		 * 
+		 * for(PeopleInfo people : listPeople) { JSONObject person = new JSONObject();
+		 * 
+		 * person.put("name", people.getName()); if(people.getTrackName() == null) {
+		 * person.put("trackName", JSONObject.NULL); }else { person.put("trackName",
+		 * people.getTrackName()); } person.put("type", people.getType());
+		 * person.put("service", people.getService()); person.put("serviceUrl",
+		 * people.getServiceUrl());
+		 * 
+		 * 
+		 * list.put(person);
+		 * 
+		 * }
+		 */
+		
+		ObjectMapper mapper = new ObjectMapper();
+		
+		String strProb= "[";
+		
+		for(int i = 0; i < listPeople.size(); i++) {
 
-			person.put("name", people.getName());
-			if(people.getTrackName() == null) {
-				person.put("trackName", JSONObject.NULL);
-			}else {
-				person.put("trackName", people.getTrackName());
-			}
-			person.put("type", people.getType());
-			person.put("service", people.getService());
-			person.put("serviceUrl", people.getServiceUrl());
-			
-
-			list.put(person);
+		    mapper.enable(SerializationFeature.INDENT_OUTPUT);
+		    if(i == 0) {
+		    	
+			    try {
+					strProb += mapper.writeValueAsString(listPeople.get(i));
+				} catch (JsonProcessingException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+		    }else {
+		    	try {
+					strProb += ","+mapper.writeValueAsString(listPeople.get(i));
+				} catch (JsonProcessingException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+		    }
 			
 		}
 		
-		return list.toList();
+		strProb += "]";
+
+		Gson gson = new Gson();
+		
+		List objectJson = gson.fromJson(strProb, List.class);
+		
+		return objectJson;
 	}
 	
 	@GetMapping(value = "/searchLink/{parameter}")
@@ -175,26 +209,56 @@ public class Practica1Controller {
             contTV++;
         }
         
-        JSONArray list = new JSONArray();
-        
-		for(LinkInfo people : listLink) {
-			JSONObject person = new JSONObject();
-			
-			person.put("name", people.getName());
-			person.put("type", people.getType());
-			person.put("urlSearch", people.getLink());
-			if(people.getCountry() == null) {
-				person.put("country", JSONObject.NULL);
-			}else {
-				person.put("country", people.getCountry());
-			}
-			person.put("service", people.getService());
-			
+		/*
+		 * JSONArray list = new JSONArray();
+		 * 
+		 * for(LinkInfo people : listLink) { JSONObject person = new JSONObject();
+		 * if(people.getCountry() == null) { person.put("country", JSONObject.NULL);
+		 * }else { person.put("country", people.getCountry()); }
+		 * 
+		 * person.put("name", people.getName()); person.put("type", people.getType());
+		 * person.put("urlSearch", people.getUrlSearch()); person.put("service",
+		 * people.getService());
+		 * 
+		 * 
+		 * list.put(person);
+		 * 
+		 * }
+		 */
+		
+		ObjectMapper mapper = new ObjectMapper();
+		
+		String strProb= "[";
+		
+		for(int i = 0; i < listLink.size(); i++) {
 
-			list.put(person);
+		    mapper.enable(SerializationFeature.INDENT_OUTPUT);
+		    if(i == 0) {
+		    	
+			    try {
+					strProb += mapper.writeValueAsString(listLink.get(i));
+				} catch (JsonProcessingException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+		    }else {
+		    	try {
+					strProb += ","+mapper.writeValueAsString(listLink.get(i));
+				} catch (JsonProcessingException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+		    }
 			
 		}
-		return list.toList();
+		
+		strProb += "]";
+
+		Gson gson = new Gson();
+		
+		List objectJson = gson.fromJson(strProb, List.class);
+		
+		return objectJson;
 	}
 	
 	

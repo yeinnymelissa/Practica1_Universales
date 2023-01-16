@@ -1,13 +1,19 @@
 package com.practica1.apiRest.getPeticion;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 @JsonPropertyOrder({"name", "trackName", "type", "service", "serviceUrl"})
 public class PeopleInfo {
+	@JsonProperty(index = 1)
 	private String name;
+	@JsonProperty(index = 2)
 	private String trackName;
+	@JsonProperty(index = 3)
 	private String type;
+	@JsonProperty(index = 4)
 	private String service;
+	@JsonProperty(index = 5)
 	private String serviceUrl;
 	
 
