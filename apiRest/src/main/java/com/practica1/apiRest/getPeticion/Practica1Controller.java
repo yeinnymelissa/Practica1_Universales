@@ -36,9 +36,9 @@ public class Practica1Controller {
 		return result;
 	}
 	
-	//https://itunes.apple.com/search?term=katy+perry&attribute=allArtistTerm
-
-    
+    //FUNCION DE TIPO GET, ESTA FUNCION AYUDA A ENCONTRAR (POR MEDIO DE LA URL) 
+	//INFORMACIÓN SOBRE UN ARTISTA Y SU TRABAJO EN ESPECIFICO, CONSULTANDO DOS APIS
+	//LA API DE ITUNES Y LA DE TVMAZE
 	@GetMapping(value = "/find/{nameC}")
 	private List findTodo(@PathVariable("nameC") String nameC) {
 		
@@ -92,23 +92,6 @@ public class Practica1Controller {
             listPeople.add(one);
             contTV++;
         }
-        
-		/*
-		 * JSONArray list = new JSONArray();
-		 * 
-		 * for(PeopleInfo people : listPeople) { JSONObject person = new JSONObject();
-		 * 
-		 * person.put("name", people.getName()); if(people.getTrackName() == null) {
-		 * person.put("trackName", JSONObject.NULL); }else { person.put("trackName",
-		 * people.getTrackName()); } person.put("type", people.getType());
-		 * person.put("service", people.getService()); person.put("serviceUrl",
-		 * people.getServiceUrl());
-		 * 
-		 * 
-		 * list.put(person);
-		 * 
-		 * }
-		 */
 		
 		ObjectMapper mapper = new ObjectMapper();
 		
@@ -144,7 +127,10 @@ public class Practica1Controller {
 		
 		return objectJson;
 	}
-	
+
+    //FUNCION DE TIPO GET, ESTA FUNCION AYUDA A REALIZAR UNA BUSQUEDA (POR MEDIO DE LA URL) 
+	//DE UNA PALABRA Y ENCUENTRA TODAS LAS COINCIDENCIAS POSIBLES MOSTRANDO SU URL PARA
+	//ENCONTRARLO MAS FACIL, SE BUSCA EN LA API DE ITUNES Y LA DE TVMAZE
 	@GetMapping(value = "/searchLink/{parameter}")
 	private List searchLink(@PathVariable("parameter") String parameter) {
 		
@@ -208,23 +194,6 @@ public class Practica1Controller {
             }
             contTV++;
         }
-        
-		/*
-		 * JSONArray list = new JSONArray();
-		 * 
-		 * for(LinkInfo people : listLink) { JSONObject person = new JSONObject();
-		 * if(people.getCountry() == null) { person.put("country", JSONObject.NULL);
-		 * }else { person.put("country", people.getCountry()); }
-		 * 
-		 * person.put("name", people.getName()); person.put("type", people.getType());
-		 * person.put("urlSearch", people.getUrlSearch()); person.put("service",
-		 * people.getService());
-		 * 
-		 * 
-		 * list.put(person);
-		 * 
-		 * }
-		 */
 		
 		ObjectMapper mapper = new ObjectMapper();
 		
